@@ -1,19 +1,34 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { cartItems } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
-      <div className="nav-brand" onClick={() => navigate('/')}>Shop</div>
+      <div className="nav-brand">
+        <Link to="/">🛍️ ShopHub</Link>
+      </div>
       <div className="nav-items">
-        <button className="nav-btn" onClick={() => navigate('/login')}>Login</button>
-        <button className="cart-btn" onClick={() => navigate('/cart')}>
-          Cart ({cartItems.length})
-        </button>
+        <Link to="/" className="nav-btn">Home</Link>
+        {isAuthenticated ? (
+          <>
+            <span className="user-name">Hi, {user?.name}</span>
+            <button onClick={handleLogout} className="nav-btn logout-btn">Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="nav-btn">Login</Link>
+            <Link to="/register" className="nav-btn">Register</Link>
+          </>
+        )}
       </div>
     </nav>
   );

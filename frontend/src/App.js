@@ -1,27 +1,26 @@
-// filepath: d:\Ecommerce-Project\Ecommerce-MERN\frontend\src\App.js
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
-import Cart from './pages/Cart';
 import Login from './pages/Login';
-import './index.css';
+import Register from './pages/Register';
 
 function App() {
   return (
-    <BrowserRouter>
-      <CartProvider>
-        <div className="app">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </div>
-      </CartProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<ProtectedRoute />}>
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

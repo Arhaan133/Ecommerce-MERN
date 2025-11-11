@@ -1,18 +1,27 @@
-import express from 'express';
-import products from '../data/products.js';
-
+const express = require('express');
 const router = express.Router();
 
-// GET all products
-router.get('/products', (req, res) => {
-  res.json(products);
+router.get('/', async (req, res) => {
+  try {
+    const Product = require('../models/Product');
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// GET single product by ID
-router.get('/products/:id', (req, res) => {
-  const product = products.find(p => p._id === req.params.id);
-  if (product) res.json(product);
-  else res.status(404).json({ message: 'Product not found' });
+router.get('/:id', async (req, res) => {
+  try {
+    const Product = require('../models/Product');
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-export default router;
+module.exports = router;
